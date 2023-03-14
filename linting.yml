@@ -1,25 +1,19 @@
-name: Semantic Release
+name: Check PR title
 
 on:
-  push:
-    branches:
-      - master
+  pull_request:
+    types: [opened, edited, reopened]
 
 jobs:
-  release:
-    name: Release
+  check-pr-title:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
-      - name: Setup Node.js
-        uses: actions/setup-node@v2
-        with:
-          node-version: "18.x"
-      - name: Install Dependencies
-        run: npm install
-      - name: Run Semantic Release
-        env:
-          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
-        run: npx semantic-release --debug
+      - name: Checkout code
+        uses: actions/checkout@v3
+      - name: Check PR title
+        run: |
+          title=$(echo "${{ github.event.pull_request.title }}" | tr -d '\r')
+          if ! echo "${title}" | grep -qE "^(feat|fix|docs|style|refactor|perf|test|build|ci|chore|revert)(\([a-zA-Z0-9]+\))?(!)?: [^[:punct:]]+(\n[A-Za-z0-9_ -]*#[0-9]+)?$"; then
+            echo "ERROR: Pull request title does not follow Conventional Commit format. Please update the title." >&2
+            exit 1
+          fi
