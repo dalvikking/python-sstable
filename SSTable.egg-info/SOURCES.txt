@@ -1,0 +1,11 @@
+LICENSE
+MANIFEST.in
+README
+setup.py
+SSTable.egg-info/PKG-INFO
+SSTable.egg-info/SOURCES.txt
+SSTable.egg-info/dependency_links.txt
+SSTable.egg-info/top_level.txt
+sstable/sstable.py
+sstable/sstable2.py
+tests/test.py
